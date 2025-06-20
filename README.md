@@ -1,4 +1,3 @@
-```markdown
 # Student Grades CI/CD Project
 
 ## תיאור
@@ -27,5 +26,3 @@ docker-compose up --build
 כל `push` ל-`main` מפעיל CD אוטומטי ל-Render.
 
 ![CI Status](https://img.shields.io/github/actions/workflow/status/<user>/student-grades-ci-cd/ci.yml)
-
-```  
