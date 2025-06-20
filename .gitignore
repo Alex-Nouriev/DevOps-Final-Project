@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+grades.db
+.DS_Store
+
+# Docker
+*.log
+
+# VSCode
+.vscode/
