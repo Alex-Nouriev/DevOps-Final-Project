@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    image: student-grades-ci-cd:latest
+    ports:
+      - "5000:5000"
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
