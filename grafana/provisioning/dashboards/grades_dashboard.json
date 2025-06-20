@@ -1,0 +1,26 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Student Grades Overview",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "API Request Count",
+        "targets": [
+          { "expr": "flask_requests_total" }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Student vs Class & Overall Average",
+        "targets": [
+          {
+            "expr": "avg_over_time(grades_overall_average[5m])"
+          }
+          // הוסיפו PromQL להרכבת השוואות לפי Student/Class
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}
