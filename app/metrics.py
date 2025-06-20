@@ -9,5 +9,6 @@ response_histogram = Histogram(
     'Histogram of HTTP response times'
 )
 
+
 def setup_metrics(app):
     app.wsgi_app = make_wsgi_app()
