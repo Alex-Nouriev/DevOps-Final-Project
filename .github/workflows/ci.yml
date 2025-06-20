@@ -1,0 +1,23 @@
+name: CI
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Lint Code
+        run: flake8 app
+      - name: Run Tests
+        run: pytest -q
+      - name: Build Docker Image
+        run: |
+          docker build . \
+            -t ${{ secrets.DOCKERHUB_USER }}/student-grades:${{ github.sha }}
