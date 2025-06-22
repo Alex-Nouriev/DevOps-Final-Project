@@ -3,7 +3,7 @@ from app import create_app
 
 
 @pytest.fixture
-def client(setup_db):
+def client(setup_db):  # pytest יודע למצוא את setup_db מתוך conftest.py
     app = create_app()
     app.config['TESTING'] = True
     return app.test_client()
