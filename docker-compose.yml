@@ -3,8 +3,12 @@ services:
   app:
     build: .
     image: student-grades-ci-cd:latest
+    environment:
+      - PORT=5000
     ports:
       - "5000:5000"
+    depends_on:
+      - prometheus
   node-exporter:
     image: prom/node-exporter
     ports:
