@@ -1,12 +1,13 @@
 from flask import Blueprint, jsonify
-from .models import (
-    get_course_averages,
-    get_overall_average,
-    get_student_scores
-)
+from .models import get_course_averages, get_overall_average, get_student_scores
 from .metrics import request_counter, response_histogram
 
 bp = Blueprint('api', __name__, url_prefix='/api')
+
+# CICD test endpoint (commented for live demo)
+# @bp.route('/cicd-test')
+# def cicd_test():
+#     return 'CI/CD Pipeline Working!', 200
 
 @bp.before_request
 def before_request():
@@ -30,5 +31,8 @@ def student_avg(student_id):
 
 @bp.after_request
 def after_request(response):
-    # response.elapsed not available; skip histogram timing or integrate via middleware
+    try:
+        response_histogram.observe(response.elapsed.total_seconds())
+    except Exception:
+        pass
     return response
