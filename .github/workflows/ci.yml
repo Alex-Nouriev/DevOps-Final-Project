@@ -36,7 +36,7 @@ jobs:
         run: flake8 app
 
       - name: Run Unit Tests
-        run: pytest -q --disable-warnings --maxfail=1
+        run: PYTHONPATH=. pytest -q --disable-warnings --maxfail=1
 
       - name: Build Docker Image
         run: |
