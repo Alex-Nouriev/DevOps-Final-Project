@@ -20,7 +20,7 @@
             "expr": "avg_over_time(app_overall_avg[5m])"
           },
           {
-            "expr": "avg_over_time(app_class_avg{course="Math"}[5m])"
+            "expr": "avg_over_time(app_class_avg{course=\"Math\"}[5m])"
           }
         ],
         "xaxis": {"show": true},
