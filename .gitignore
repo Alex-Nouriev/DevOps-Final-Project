@@ -3,9 +3,8 @@ __pycache__/
 .env
 grades.db
 .DS_Store
-
+.vscode/
 # Docker
 *.log
-
-# VSCode
-.vscode/
+# GitHub Actions Cache
+**/node_modules
