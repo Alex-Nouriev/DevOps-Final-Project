@@ -1,14 +1,14 @@
 # Student Grades CI/CD Project
 
 ## תיאור
-יישום Flask להצגת ציוני סטודנט בתואר, עם CI/CD מלא ופריסה ב-Render.
+יישום Flask להצגת ציוני סטודנט עם CI/CD מלא ופריסה חינמית על Render.
 
 ## ארכיטקטורה
 - Flask API (app/)
 - Prometheus metrics + Grafana dashboard
 - Containerized with Docker & Docker Compose
-- CI: GitHub Actions (lint, tests, build)
-- CD: Render via GitHub Actions
+- CI: GitHub Actions (lint, tests, build, cache)
+- CD: Render via Webhook
 
 ## התקנה והרצה מקומית
 ```bash
@@ -18,11 +18,17 @@ docker-compose up --build
 ```
 
 ## Endpoints
+- `GET /` — בדיקת סטטוס
 - `GET /api/courses/averages` — ממוצע ציוני כיתה לפי קורס
-- `GET /api/student/{id}/averages` — ציוני סטודנט, ממוצע כולל, השוואות
+- `GET /api/student/{id}/averages` — ציוני סטודנט, ממוצע כולל, והשוואות
 - `/metrics` — Prometheus metrics
 
 ## פריסה ב-Render
-כל `push` ל-`main` מפעיל CD אוטומטי ל-Render.
+1. צור Web Service ב-Render (Docker)
+2. הגדר Deploy Hook והכנס ל-Secrets `RENDER_DEPLOY_HOOK_URL`
+3. Push ל-main מפרסם אוטומטית
 
 ![CI Status](https://img.shields.io/github/actions/workflow/status/<user>/student-grades-ci-cd/ci.yml)
+
+## Screenshots
+![Grafana Dashboard](docs/grafana_dashboard.png)
