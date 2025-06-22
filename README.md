@@ -1,5 +1,5 @@
 # Student Grades CI/CD Project
-[![CI](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/ci.yml)
+![CI](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/ci.yml/badge.svg)
 ![Deploy](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/deploy.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/Alex-Nouriev/DevOps-Final-Project)
 ![GitHub stars](https://img.shields.io/github/stars/Alex-Nouriev/DevOps-Final-Project?style=social)
