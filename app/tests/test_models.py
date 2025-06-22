@@ -5,7 +5,7 @@ from app.models import (
     get_overall_average,
     get_student_scores,
 )
-from app.models import DB_PATH
+# from app.models import DB_PATH
 
 
 @pytest.fixture(autouse=True)
