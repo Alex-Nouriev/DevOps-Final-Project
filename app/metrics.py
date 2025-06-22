@@ -1,38 +1,20 @@
-from flask import Blueprint, jsonify
-from .models import get_course_averages, get_overall_average, get_student_scores
-from .metrics import request_counter, response_histogram
+from prometheus_client import Counter, Histogram, make_wsgi_app
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+# Metrics
+request_counter = Counter(
+    'flask_requests_total',
+    'Total number of HTTP requests'
+)
+response_histogram = Histogram(
+    'flask_response_seconds',
+    'Histogram of HTTP response times'
+)
 
-# CICD test endpoint (commented for live demo)
-# @bp.route('/cicd-test')
-# def cicd_test():
-#     return 'CI/CD Pipeline Working!', 200
 
-@bp.before_request
-def before_request():
-    request_counter.inc()
-
-@bp.route('/courses/averages')
-def courses_avg():
-    data = get_course_averages()
-    return jsonify(data)
-
-@bp.route('/student/<int:student_id>/averages')
-def student_avg(student_id):
-    scores = get_student_scores(student_id)
-    overall = get_overall_average()
-    courses = get_course_averages()
-    return jsonify({
-        'student_scores': scores,
-        'overall_average': overall,
-        'course_averages': courses
+def setup_metrics(app):
+    # register metrics middleware on /metrics
+    metrics_app = make_wsgi_app()
+    app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
+        '/metrics': metrics_app
     })
-
-@bp.after_request
-def after_request(response):
-    try:
-        response_histogram.observe(response.elapsed.total_seconds())
-    except Exception:
-        pass
-    return response
