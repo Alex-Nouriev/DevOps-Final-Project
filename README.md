@@ -31,4 +31,3 @@ docker-compose up --build
 ![CI Status](https://img.shields.io/github/actions/workflow/status/<user>/student-grades-ci-cd/ci.yml)
 
 ## Screenshots
-![Grafana Dashboard](docs/grafana_dashboard.png)
