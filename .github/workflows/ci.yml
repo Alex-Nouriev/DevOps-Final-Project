@@ -1,0 +1,31 @@
+name: CI
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install
+        run: pip install flake8
+      - name: Lint
+        run: flake8 app/
+  test:
+    runs-on: ubuntu-latest
+    services:
+      webapp:
+        image: python:3.11-slim
+        ports: ['5000:5000']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install deps
+        run: pip install -r app/requirements.txt
+      - name: Run tests
+        run: pytest tests/
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        run: docker build -t ${{ github.repository }}:pr-${{ github.event.number }} .
