@@ -140,16 +140,3 @@ DevOps-Final-Project/
 ├── Dockerfile
 └── README.md
 ```
-
----
-
-## 📑 Authors & Collaboration
-
-Built by Alex Nouriev  
-[Add `saarsalhov@gmail.com` as collaborator for Render deployment access]
-
----
-
-## ✅ License
-
-MIT License
