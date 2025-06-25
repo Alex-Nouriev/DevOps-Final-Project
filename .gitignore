@@ -1,10 +1,51 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtualenv
 .env
-grades.db
-.DS_Store
+venv/
+ENV/
+env/
+
+# Editor files
 .vscode/
-# Docker
+.idea/
+*.swp
+*.swo
+.DS_Store
+*.bak
+
+# Logs
 *.log
-# GitHub Actions Cache
-**/node_modules
+
+# OS-specific
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# GitHub Actions cache (if using node modules for some step)
+**/node_modules/
+
+# Test cache
+.cache/
+.pytest_cache/
+coverage/
+
+# Grafana provisioning/output (if created dynamically)
+grafana/data/
+grafana/plugins/
+
+# Prometheus runtime data
+prometheus/data/
+
+# Local artifacts
+grades.db

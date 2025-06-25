@@ -1,44 +1,31 @@
 name: CI
-
 on:
   pull_request:
-    branches:
-      - main
-
+    branches: [ main ]
 jobs:
-  test-build:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.11]
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Upgrade pip
-        run: pip install --upgrade pip
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Lint with Flake8
-        run: flake8 app
-
-      - name: Run Unit Tests
-        run: PYTHONPATH=. pytest -q --disable-warnings --maxfail=1
-
-      - name: Build Docker Image
-        run: |
-          docker build . \
-            -t student-grades-ci-cd:${{ github.sha }}
+      - name: Install
+        run: pip install flake8
+      - name: Lint
+        run: flake8 app/
+  test:
+    runs-on: ubuntu-latest
+    services:
+      webapp:
+        image: python:3.11-slim
+        ports: ['5000:5000']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install deps
+        run: pip install -r app/requirements.txt
+      - name: Run tests
+        run: pytest tests/
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        run: docker build -t ${{ github.repository }}:pr-${{ github.event.number }} .

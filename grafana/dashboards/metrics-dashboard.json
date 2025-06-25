@@ -1,0 +1,8 @@
+{
+  "annotations": { "list": [] },
+  "panels": [
+    {"type":"graph","title":"Service Count","targets":[{"expr":"service_tracker_total_services","legendFormat":"total services"}]},
+    {"type":"graph","title":"Uptime Ratio","targets":[{"expr":"service_tracker_uptime_ratio","legendFormat":"{{name}}"}]}
+  ],
+  "schemaVersion":16
+}
