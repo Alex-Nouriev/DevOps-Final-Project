@@ -20,10 +20,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          USERNAME=$(echo "${{ secrets.DOCKER_USERNAME }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE_NAME=$USERNAME/flask-college-app:latest
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-college-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/flask-college-app:latest
 
       - name: Deploy to Render via webhook
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
