@@ -140,3 +140,13 @@ DevOps-Final-Project/
 ├── Dockerfile
 └── README.md
 ```
+<<<<<<< meir
+
+
+---
+
+## ✅ License
+
+MIT License
+=======
+>>>>>>> main
