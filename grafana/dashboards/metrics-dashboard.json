@@ -1,8 +1,47 @@
 {
-  "annotations": { "list": [] },
+  "annotations": {
+    "list": []
+  },
   "panels": [
-    {"type":"graph","title":"Service Count","targets":[{"expr":"service_tracker_total_services","legendFormat":"total services"}]},
-    {"type":"graph","title":"Uptime Ratio","targets":[{"expr":"service_tracker_uptime_ratio","legendFormat":"{{name}}"}]}
+    {
+      "type": "graph",
+      "title": "Total HTTP Requests",
+      "targets": [
+        {
+          "expr": "rate(app_request_count_total[1m])",
+          "legendFormat": "Requests per second"
+        }
+      ],
+      "datasource": "Prometheus",
+      "id": 1
+    },
+    {
+      "type": "graph",
+      "title": "Uptime Ratio per Service",
+      "targets": [
+        {
+          "expr": "avg_over_time(service_tracker_uptime_ratio[5m])",
+          "legendFormat": "{{name}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "id": 2
+    },
+    {
+      "type": "graph",
+      "title": "CPU Usage (Node Exporter)",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "datasource": "Prometheus",
+      "id": 3
+    }
   ],
-  "schemaVersion":16
+  "schemaVersion": 30,
+  "title": "Service Tracker Monitoring",
+  "uid": "service-monitoring",
+  "version": 1
 }

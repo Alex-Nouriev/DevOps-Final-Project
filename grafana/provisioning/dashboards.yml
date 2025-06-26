@@ -1,9 +1,9 @@
 apiVersion: 1
 
 providers:
-  - name: 'default'
+  - name: 'Service Tracker Dashboards'
     orgId: 1
-    folder: ''
+    folder: 'Service Tracker'
     type: file
     disableDeletion: false
     editable: true
