@@ -1,7 +1,7 @@
 # 🧪 DevOps Final Project – Flask Service Monitor
 
 [![CI](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/ci.yml)
-[![CD](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/deploy.yml/badge.svg)](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/deploy.yml)
+[![CD](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/cd.yml/badge.svg)](https://github.com/Alex-Nouriev/DevOps-Final-Project/actions/workflows/cd.yml)
 ![Last Commit](https://img.shields.io/github/last-commit/Alex-Nouriev/DevOps-Final-Project)
 ![GitHub stars](https://img.shields.io/github/stars/Alex-Nouriev/DevOps-Final-Project?style=social)
 
@@ -140,6 +140,7 @@ DevOps-Final-Project/
 ├── Dockerfile
 └── README.md
 ```
+<<<<<<< meir
 
 
 ---
@@ -147,3 +148,5 @@ DevOps-Final-Project/
 ## ✅ License
 
 MIT License
+=======
+>>>>>>> main
