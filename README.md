@@ -141,12 +141,6 @@ DevOps-Final-Project/
 └── README.md
 ```
 
----
-
-## 📑 Authors & Collaboration
-
-Built by Alex Nouriev  
-[Add `saarsalhov@gmail.com` as collaborator for Render deployment access]
 
 ---
 
