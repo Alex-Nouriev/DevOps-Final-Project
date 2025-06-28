@@ -8,8 +8,8 @@
       "title": "Total HTTP Requests",
       "targets": [
         {
-          "expr": "rate(app_request_count_total[1m])",
-          "legendFormat": "Requests per second"
+          "expr": "sum by (name, status) (rate(service_tracker_check_count_total[1m]) * 60)",
+          "legendFormat": "{{name}} - {{status}} req/min"
         }
       ],
       "datasource": "Prometheus",
