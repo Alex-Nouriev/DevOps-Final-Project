@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+service-monitor:
+    build:
+      context: .
+    container_name: service-monitor
+    ports:
+      - '5000:5000'
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
