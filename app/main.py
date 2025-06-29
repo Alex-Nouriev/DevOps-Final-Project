@@ -52,6 +52,11 @@ TOTAL_REQUESTS = Gauge(
 )
 
 
+# @app.route('/cicd-test')
+# def cicd_test():
+#     return "CI/CD Pipeline Working!", 200
+
+
 @app.route('/service', methods=['POST'])
 def add_service() -> Response:
     data = request.get_json(force=True)
@@ -132,7 +137,6 @@ def _monitor_loop() -> None:
                     svc['success_count'] += 1
                     up_count += 1
 
-                # חישוב יחס זמינות על פי מס' קריאות
                 if svc['check_count'] > 0:
                     ratio = svc['success_count'] / svc['check_count']
                     SERVICE_UPTIME_RATIO.labels(name=name).set(ratio)
