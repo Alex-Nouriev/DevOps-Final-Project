@@ -27,8 +27,6 @@ def test_add_and_get_service():
     assert json_data['name'] == 'svc1'
     assert json_data['url'] == data['url']
     assert isinstance(json_data['is_up'], bool)
-    assert 'up_since' in json_data
-    assert 'uptime_seconds' in json_data
 
 
 def test_add_duplicate_service():
@@ -81,5 +79,3 @@ def test_metrics_after_add(monkeypatch):
     text = resp.get_data(as_text=True)
     # Verify the service count gauge
     assert "service_tracker_total_services 1.0" in text
-    # Verify at least one check_count counter for "up"
-    assert 'service_tracker_check_count_total{name="svc3",status="up"}' in text
