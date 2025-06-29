@@ -1,47 +1,153 @@
 {
-  "annotations": {
-    "list": []
-  },
+  "uid": "overview_v4",
+  "title": "App & Local Machine Overview",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 4,
+  "refresh": "5s",
   "panels": [
     {
-      "type": "graph",
-      "title": "Total HTTP Requests",
+      "type": "stat",
+      "title": "Total Services",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "decimals": 0 }
+      },
       "targets": [
-        {
-          "expr": "rate(app_request_count_total[1m])",
-          "legendFormat": "Requests per second"
-        }
-      ],
-      "datasource": "Prometheus",
-      "id": 1
+        { "expr": "service_tracker_total_services" }
+      ]
     },
     {
-      "type": "graph",
-      "title": "Uptime Ratio per Service",
+      "type": "stat",
+      "title": "Active Services",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "decimals": 0 }
+      },
       "targets": [
-        {
-          "expr": "avg_over_time(service_tracker_uptime_ratio[5m])",
-          "legendFormat": "{{name}}"
-        }
-      ],
-      "datasource": "Prometheus",
-      "id": 2
+        { "expr": "service_tracker_active_services" }
+      ]
     },
     {
-      "type": "graph",
-      "title": "CPU Usage (Node Exporter)",
+      "type": "stat",
+      "title": "Inactive Services",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "decimals": 0 }
+      },
+      "targets": [
+        { "expr": "service_tracker_inactive_services" }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Uptime per Service",
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 4 },
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "decimals": 1 }
+      },
+      "targets": [
+        { "expr": "service_tracker_uptime_ratio" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Requests (my-service)",
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 10 },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "decimals": 0 }
+      },
       "targets": [
         {
-          "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "{{instance}}"
+          "expr": "service_tracker_total_requests"
         }
-      ],
-      "datasource": "Prometheus",
-      "id": 3
+      ]
+    },
+    {
+      "type": "gauge",
+      "title": "CPU Usage",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 14 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 - avg(irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100"
+        }
+      ]
+    },
+    {
+      "type": "gauge",
+      "title": "RAM Usage",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 14 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "targets": [
+        {
+          "expr": "(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100"
+        }
+      ]
+    },
+    {
+      "type": "gauge",
+      "title": "Disk Usage (Root)",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 14 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "targets": [
+        {
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\",fstype!~\"tmpfs|devtmpfs\"} - node_filesystem_free_bytes{mountpoint=\"/\",fstype!~\"tmpfs|devtmpfs\"}) / node_filesystem_size_bytes{mountpoint=\"/\",fstype!~\"tmpfs|devtmpfs\"} * 100"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "RAM Total / Free",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 20 },
+      "fieldConfig": {
+        "defaults": { "unit": "bytes", "decimals": 2 }
+      },
+      "targets": [
+        {
+          "expr": "node_memory_MemTotal_bytes"
+        },
+        {
+          "expr": "node_memory_MemAvailable_bytes"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Disk Total / Free (Root)",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 20 },
+      "fieldConfig": {
+        "defaults": { "unit": "bytes", "decimals": 2 }
+      },
+      "targets": [
+        {
+          "expr": "node_filesystem_size_bytes{mountpoint=\"/\",fstype!~\"tmpfs|devtmpfs\"}"
+        },
+        {
+          "expr": "node_filesystem_free_bytes{mountpoint=\"/\",fstype!~\"tmpfs|devtmpfs\"}"
+        }
+      ]
     }
-  ],
-  "schemaVersion": 30,
-  "title": "Service Tracker Monitoring",
-  "uid": "service-monitoring",
-  "version": 1
+  ]
 }
