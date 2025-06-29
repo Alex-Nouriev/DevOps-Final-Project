@@ -75,8 +75,7 @@ def add_service() -> Response:
         }
         SERVICE_COUNT.set(len(services))
 
-    logging.info("Added service %s for monitoring (interval\
-                 =%s s)", name, interval)
+    logging.info("Added service %s (interval=%s s)", name, interval)
     return jsonify({'message': f"Service '{name}' added."}), 201
 
 
@@ -133,6 +132,7 @@ def _monitor_loop() -> None:
                     svc['success_count'] += 1
                     up_count += 1
 
+                # חישוב יחס זמינות על פי מס' קריאות
                 if svc['check_count'] > 0:
                     ratio = svc['success_count'] / svc['check_count']
                     SERVICE_UPTIME_RATIO.labels(name=name).set(ratio)
@@ -144,8 +144,8 @@ def _monitor_loop() -> None:
             SERVICE_COUNT.set(total)
             ACTIVE_SERVICES.set(up_count)
             INACTIVE_SERVICES.set(total - up_count)
-            TOTAL_REQUESTS.set(sum(s['check_count \
-                                     '] for s in services.values()))
+            TOTAL_REQUESTS.set(
+                sum(s['check_count'] for s in services.values()))
 
         time.sleep(1)
 
