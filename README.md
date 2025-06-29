@@ -139,16 +139,5 @@ DevOps-Final-Project/
 ├── docker-compose.yml
 ├── Dockerfile
 └── README.md
+<<<<<<< HEAD
 ```
-<<<<<<< meir
-
-
----
-
-## ✅ License
-
-MIT License
-=======
->>>>>>> main
->>>>>>> check
-

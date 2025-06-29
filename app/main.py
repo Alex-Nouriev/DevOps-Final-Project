@@ -6,7 +6,8 @@ from typing import Any, Dict
 
 from flask import Flask, request, jsonify, Response
 from prometheus_client import (
-    Counter, Gauge, CONTENT_TYPE_LATEST, generate_latest)
+    CollectorRegistry, Gauge, CONTENT_TYPE_LATEST, generate_latest
+)
 
 # Configure logging
 logging.basicConfig(
@@ -21,19 +22,33 @@ services: Dict[str, Dict[str, Any]] = {}
 services_lock = threading.Lock()
 
 # Prometheus metrics
+registry = CollectorRegistry()
+
 SERVICE_COUNT = Gauge(
     'service_tracker_total_services',
     'Total number of monitored services',
+    registry=registry,
+)
+ACTIVE_SERVICES = Gauge(
+    'service_tracker_active_services',
+    'Number of services currently up',
+    registry=registry,
+)
+INACTIVE_SERVICES = Gauge(
+    'service_tracker_inactive_services',
+    'Number of services currently down',
+    registry=registry,
 )
 SERVICE_UPTIME_RATIO = Gauge(
     'service_tracker_uptime_ratio',
     'Service uptime ratio (per service)',
     ['name'],
+    registry=registry,
 )
-CHECK_COUNT = Counter(
-    'service_tracker_check_count_total',
-    'Total number of health checks performed',
-    ['name', 'status'],
+TOTAL_REQUESTS = Gauge(
+    'service_tracker_total_requests',
+    'Total number of health check requests across all services',
+    registry=registry,
 )
 
 
@@ -55,14 +70,12 @@ def add_service() -> Response:
             'interval': interval,
             'last_check': 0.0,
             'is_up': False,
-            'up_since': None,
-            'up_time': 0.0,
-            'start_time': time.time(),
+            'check_count': 0,
+            'success_count': 0,
         }
         SERVICE_COUNT.set(len(services))
 
-    logging.info("Added service %s for monitoring\
-                  (interval=%s s)", name, interval)
+    logging.info("Added service %s (interval=%s s)", name, interval)
     return jsonify({'message': f"Service '{name}' added."}), 201
 
 
@@ -76,18 +89,18 @@ def get_service_status(name: str) -> Response:
         'name': name,
         'url': svc['url'],
         'is_up': svc['is_up'],
-        'up_since': svc['up_since'],
-        'uptime_seconds': svc['up_time'],
+        'total_checks': svc['check_count'],
+        'successful_checks': svc['success_count'],
+        'uptime_ratio': (
+            svc['success_count'] / svc['check_count']
+            if svc['check_count'] > 0 else None
+        )
     })
-
-# @app.route('/cicd-test')
-# def cicd_test():
-#     return "CI/CD Pipeline Working!", 200
 
 
 @app.route('/metrics', methods=['GET'])
 def metrics() -> Response:
-    data = generate_latest()
+    data = generate_latest(registry)
     return data, 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 
@@ -97,30 +110,43 @@ def _monitor_loop() -> None:
         now = time.time()
         with services_lock:
             items = list(services.items())
+
+        up_count = 0
+        total_requests = 0
+
         for name, svc in items:
             if now - svc['last_check'] < svc['interval']:
                 continue
+
             try:
                 resp = requests.get(svc['url'], timeout=5)
                 is_up = resp.status_code == 200
             except Exception as exc:
                 logging.warning("Health check failed for %s: %s", name, exc)
                 is_up = False
-            with services_lock:
-                prev = svc['is_up']
-                svc['last_check'] = now
-                svc['is_up'] = is_up
-                if is_up:
-                    if not prev:
-                        svc['up_since'] = now
-                    svc['up_time'] += svc['interval']
-                else:
-                    svc['up_since'] = None
 
-                uptime_ratio = svc['up_time'] / max(now - svc['start_time'], 1)
-                SERVICE_UPTIME_RATIO.labels(name=name).set(uptime_ratio)
-                status_label = 'up' if is_up else 'down'
-                CHECK_COUNT.labels(name=name, status=status_label).inc()
+            with services_lock:
+                svc['last_check'] = now
+                svc['check_count'] += 1
+                if is_up:
+                    svc['success_count'] += 1
+                    up_count += 1
+
+                # חישוב יחס זמינות על פי מס' קריאות
+                if svc['check_count'] > 0:
+                    ratio = svc['success_count'] / svc['check_count']
+                    SERVICE_UPTIME_RATIO.labels(name=name).set(ratio)
+
+                total_requests += svc['check_count']
+
+        with services_lock:
+            total = len(services)
+            SERVICE_COUNT.set(total)
+            ACTIVE_SERVICES.set(up_count)
+            INACTIVE_SERVICES.set(total - up_count)
+            TOTAL_REQUESTS.set(
+                sum(s['check_count'] for s in services.values()))
+
         time.sleep(1)
 
 
