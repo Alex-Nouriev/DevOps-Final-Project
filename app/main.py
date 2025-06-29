@@ -6,7 +6,7 @@ from typing import Any, Dict
 
 from flask import Flask, request, jsonify, Response
 from prometheus_client import (
-    CollectorRegistry, Counter, Gauge, CONTENT_TYPE_LATEST, generate_latest
+    CollectorRegistry, Gauge, CONTENT_TYPE_LATEST, generate_latest
 )
 
 # Configure logging
@@ -51,6 +51,7 @@ TOTAL_REQUESTS = Gauge(
     registry=registry,
 )
 
+
 @app.route('/service', methods=['POST'])
 def add_service() -> Response:
     data = request.get_json(force=True)
@@ -74,8 +75,10 @@ def add_service() -> Response:
         }
         SERVICE_COUNT.set(len(services))
 
-    logging.info("Added service %s for monitoring (interval=%s s)", name, interval)
+    logging.info("Added service %s for monitoring (interval\
+                 =%s s)", name, interval)
     return jsonify({'message': f"Service '{name}' added."}), 201
+
 
 @app.route('/service/<name>', methods=['GET'])
 def get_service_status(name: str) -> Response:
@@ -95,10 +98,12 @@ def get_service_status(name: str) -> Response:
         )
     })
 
+
 @app.route('/metrics', methods=['GET'])
 def metrics() -> Response:
     data = generate_latest(registry)
     return data, 200, {'Content-Type': CONTENT_TYPE_LATEST}
+
 
 def _monitor_loop() -> None:
     logging.info("Starting monitor thread")
@@ -139,9 +144,11 @@ def _monitor_loop() -> None:
             SERVICE_COUNT.set(total)
             ACTIVE_SERVICES.set(up_count)
             INACTIVE_SERVICES.set(total - up_count)
-            TOTAL_REQUESTS.set(sum(s['check_count'] for s in services.values()))
+            TOTAL_REQUESTS.set(sum(s['check_count \
+                                     '] for s in services.values()))
 
         time.sleep(1)
+
 
 if __name__ == '__main__':
     thread = threading.Thread(target=_monitor_loop, daemon=True)
