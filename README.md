@@ -142,3 +142,4 @@ DevOps-Final-Project/
 ```
 
 ## screenshot
+![Alt text](Screenshot.jpeg.JPG)
