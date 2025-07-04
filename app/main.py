@@ -52,9 +52,9 @@ TOTAL_REQUESTS = Gauge(
 )
 
 
-# @app.route('/cicd-test')
-# def cicd_test():
-#     return "CI/CD Pipeline Working!", 200
+@app.route('/cicd-test')
+def cicd_test():
+    return "CI/CD Pipeline Working!", 200
 
 
 @app.route('/service', methods=['POST'])
